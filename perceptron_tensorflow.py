@@ -23,9 +23,13 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(units=1, activation='sigmoid', input_shape=(2,))
 ])
 
-model.compile(loss='mean_squared_error', metrics=['accuracy'])
+# Use SGD optimizer with a higher learning rate
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.3)
 
-model.fit(inputs, expected_outputs, epochs=100, verbose=0)
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['accuracy'])
+
+class_weight = {0: 3, 1: 1}
+model.fit(inputs, expected_outputs, epochs=100, class_weight=class_weight, verbose=0)
 
 loss, accuracy = model.evaluate(inputs, expected_outputs, verbose=0)
 print(f'Accuracy: {accuracy * 100:.2f}%')
